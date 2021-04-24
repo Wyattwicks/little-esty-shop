@@ -19,6 +19,14 @@ RSpec.describe "As a Merchant" do
       expect(page).to have_link('My Invoices')
     end
 
+    it "I see a link to view all my discounts" do
+      visit merchant_dashboard_index_path(@merchant)
+      expect(page).to have_link('My Discounts')
+      click_on('My Discounts')
+      expect(current_path).to eq(merchant_bulk_discounts_path(@merchant))
+    end
+
+
     it "I see a list of items ordered but not shipped yet with invoice id link" do
       item_1 = create(:random_item, merchant_id: @merchant.id)
       item_2 = create(:random_item, merchant_id: @merchant.id)
