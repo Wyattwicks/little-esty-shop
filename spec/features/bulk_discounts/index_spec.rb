@@ -3,8 +3,10 @@ require 'rails_helper'
 RSpec.describe "Merchant Discounts Index Page" do
   before :each do
     @merchant = create(:random_merchant, id: 22)
+    @merchant_2 = create(:random_merchant, id: 14)
     @discount_1 = create(:random_bulk_discount, merchant_id: 22)
     @discount_2 = create(:random_bulk_discount, merchant_id: 22)
+    @discount_3 = create(:random_bulk_discount, merchant_id: 14)
     visit merchant_bulk_discounts_path(@merchant)
   end
 
@@ -17,6 +19,12 @@ RSpec.describe "Merchant Discounts Index Page" do
       expect(page).to have_content(@discount_2.id)
       expect(page).to have_content(@discount_2.discount)
       expect(page).to have_content(@discount_2.quantity_threshold)
+
+      expect(page).to_not have_content(@discount_3.id)
+      expect(page).to_not have_content(@discount_3.discount)
+      expect(page).to_not have_content(@discount_3.quantity_threshold)
+      save_and_open_page
+
     end
 
     it "each discount listed includes a link to its show page" do
