@@ -6,6 +6,7 @@ Rails.application.routes.draw do
     scope module: :merchants do
       resources :dashboard, only: [:index]
       resources :invoices, only: [:show, :index, :update]
+      resources :bulk_discounts
       resources :items do
         member do
           patch :toggle_enabled

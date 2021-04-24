@@ -1,0 +1,11 @@
+<%= render 'merchants/header', locals: {merchant_id: @merchant} %>
+<h1>Merchants Bulk Discounts Index Page</h1>
+<div class="merchant-bulk-discounts">
+  <ul>
+  <% @merchant.bulk_discounts.each do |bulk_discount| %>
+    <li> Discount ID: <%= link_to bulk_discount.id, merchant_bulk_discount_path(@merchant, bulk_discount.id) %>
+          Discount: <%= bulk_discount.discount %>%
+          Quantity Threshold: <%=  bulk_discount.quantity_threshold %>
+      </li>
+  <% end %>
+</div>
