@@ -42,5 +42,19 @@ RSpec.describe "Merchant Discounts Index Page" do
     it "I see a link to create a new discount" do
       expect(page).to have_link("New Discount")
     end
+
+    it "Next to each discount I see a link to delete it" do
+      merchant_3 = create(:random_merchant, id: 25)
+      discount_4 = create(:random_bulk_discount, merchant_id: 25)
+      visit merchant_bulk_discounts_path(merchant_3)
+
+      expect(page).to have_link("Delete")
+
+      click_on "Delete"
+
+      expect(page).to_not have_content(discount_4.id)
+      expect(page).to_not have_content(discount_4.discount)
+      expect(page).to_not have_content(discount_4.quantity_threshold)
+    end
   end
 end
