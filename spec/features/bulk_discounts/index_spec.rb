@@ -56,5 +56,6 @@ RSpec.describe "Merchant Discounts Index Page" do
       expect(page).to_not have_content(discount_4.discount)
       expect(page).to_not have_content(discount_4.quantity_threshold)
     end
+
   end
 end

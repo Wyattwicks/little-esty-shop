@@ -14,6 +14,9 @@ RSpec.describe "Merchant Discount Show Page" do
       expect(page).to have_content(@discount_1.quantity_threshold)
     end
 
+    it "I see a link to edit the discount" do
+      expect(page).to have_link("Edit")
+    end
   end
 
 end
