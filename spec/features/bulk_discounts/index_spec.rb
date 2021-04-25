@@ -23,8 +23,6 @@ RSpec.describe "Merchant Discounts Index Page" do
       expect(page).to_not have_content(@discount_3.id)
       expect(page).to_not have_content(@discount_3.discount)
       expect(page).to_not have_content(@discount_3.quantity_threshold)
-      save_and_open_page
-
     end
 
     it "each discount listed includes a link to its show page" do
@@ -32,6 +30,21 @@ RSpec.describe "Merchant Discounts Index Page" do
       expect(page).to have_link("#{@discount_2.id}")
       click_on("#{@discount_1.id}")
       expect(current_path).to eq(merchant_bulk_discount_path(@merchant, @discount_1))
+    end
+
+    it "I see a section where the next 3 upcoming us holidays are listed" do
+      expect(page).to have_content("Memorial Day")
+      expect(page).to have_content("Independence Day")
+      expect(page).to have_content("Labor Day")
+      expect(page).to have_content("2021-05-31")
+      expect(page).to have_content("2021-07-05")
+      expect(page).to have_content("2021-09-06")
+    end
+
+    it "I see a link to create a new discount" do
+      expect(page).to have_link("")
+
+
     end
   end
 end

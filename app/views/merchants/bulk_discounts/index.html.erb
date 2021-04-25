@@ -9,3 +9,12 @@
       </li>
   <% end %>
 </div>
+
+<div class="upcoming holidays">
+  <h3>Upcoming Holidays</h3>
+    <% @holidays.each do |name, date| %>
+    <ol>
+      <%= name %> <%= date %>
+      </ol>
+    <% end %>
+</div>
