@@ -6,6 +6,7 @@ RSpec.describe "Merchant Invoice Show Page" do
     @item_1 = create(:random_item, merchant: @merchant)
     @invoice_1 = create(:random_invoice)
     @invoice_item_1 = create(:random_invoice_item, quantity: 75, unit_price: 17600, status: 'pending', item: @item_1, invoice: @invoice_1)
+    @discount_1 = create(:random_bulk_discount, discount: 100, quantity_threshold: 75, merchant_id: @merchant.id)
 
     visit merchant_invoice_path(@merchant, @invoice_1)
   end
@@ -33,20 +34,20 @@ RSpec.describe "Merchant Invoice Show Page" do
       end
     end
 
-    it "I see total revenue that will be generated from items on invoice" do
+    it "I see total revenue that includes bulk discounts" do
 
       within ".total-revenue" do
-        expect(page).to have_content('$1,320,000.00')
+        expect(page).to have_content('$0')
       end
     end
 
     it "I see a dropdown to update the invoice status" do
-      # binding.pry
+
       expect(page).to have_button('Update Invoice')
 
       select "completed", from: 'Status'
       click_on 'Update Invoice'
-    
+
       expect(current_path).to eq(merchant_invoice_path(@merchant, @invoice_1))
       expect(page).to have_content("completed")
     end

@@ -37,5 +37,15 @@ RSpec.describe Invoice, type: :model do
         expect(invoice.total_revenue).to eq(600)
       end
     end
+
+    describe '#total_revenue including bulk discounts' do
+      merchant = create(:random_merchant)
+      item_1 = create(:random_item, merchant: merchant)
+      invoice_1 = create(:random_invoice)
+      invoice_item_1 = create(:random_invoice_item, quantity: 75, unit_price: 17600, status: 'pending', item: item_1, invoice: invoice_1)
+      discount_1 = create(:random_bulk_discount, discount: 100, quantity_threshold: 75, merchant_id: merchant.id)
+
+      expect(invoice_1.total_revenue_with_bulk_discounts).to eq(0)
+    end
   end
 end
