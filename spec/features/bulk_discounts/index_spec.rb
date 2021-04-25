@@ -21,8 +21,6 @@ RSpec.describe "Merchant Discounts Index Page" do
       expect(page).to have_content(@discount_2.quantity_threshold)
 
       expect(page).to_not have_content(@discount_3.id)
-      expect(page).to_not have_content(@discount_3.discount)
-      expect(page).to_not have_content(@discount_3.quantity_threshold)
     end
 
     it "each discount listed includes a link to its show page" do
@@ -42,9 +40,7 @@ RSpec.describe "Merchant Discounts Index Page" do
     end
 
     it "I see a link to create a new discount" do
-      expect(page).to have_link("")
-
-
+      expect(page).to have_link("New Discount")
     end
   end
 end
