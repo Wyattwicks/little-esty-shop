@@ -1,0 +1,13 @@
+<h1>Merchant Discount Update Page</h1>
+
+<div class="merchant-form">
+  <%= form_with model: @bulk_discount, url: merchant_bulk_discount_path(@merchant, @bulk_discount) do |form| %>
+    <%= form.label :discount %>
+    <%= form.text_field :discount %><br>
+
+    <%= form.label :quantity_threshold %>
+    <%= form.text_field :quantity_threshold %><br>
+
+    <%= form.submit %>
+  <% end %>
+</div>
