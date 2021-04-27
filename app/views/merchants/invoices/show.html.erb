@@ -18,6 +18,10 @@
   <p>Total Revenue: <%= number_to_currency(@invoice.total_revenue) %> </p>
 </div>
 
+<div class="total-revenue_with_discounts">
+  <p>Total Revenue: <%= number_to_currency(@invoice.total_revenue_with_discounts) %> </p>
+</div>
+
 <div class="customer">
   <h2>Customer:</h2>
   <ul>
@@ -29,7 +33,10 @@
   <h2>Items on this Invoice:</h2>
     <ul>
       <% @invoice_items.each do |item| %>
-      <li><%= item.name %>---<%= item.quantity_ordered %>---<%= number_to_currency(item.price_sold) %>---<%= item.status %></li>
+      <li><%= item.name %>---<%= item.quantity %>---<%= number_to_currency(item.price_sold) %>---<%= item.status %></li>
+      <% if item.discount_id %>
+          | <%= link_to 'Applied Discount', merchant_bulk_discount_path(@merchant, item.discount_id) %>
+      <% end %>
       <% end %>
     </ul>
 

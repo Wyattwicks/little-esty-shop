@@ -45,13 +45,14 @@ RSpec.describe Invoice, type: :model do
         merchant_1 = create(:random_merchant, id: 22)
         merchant_2 = create(:random_merchant, id: 14)
         item_1 = create(:random_item, merchant_id: 22)
-        item_2 = create(:random_item, merchant_id: 14)
+        item_2 = create(:random_item, merchant_id: 22)
         invoice_1 = create(:random_invoice)
-        invoice_item_1 = create(:random_invoice_item, quantity: 10, unit_price: 10, status: 'pending', item: item_1, invoice: invoice_1)
-        invoice_item_2 = create(:random_invoice_item, quantity: 1, unit_price: 100, status: 'pending', item: item_2, invoice: invoice_1)
+        invoice_item_1 = create(:random_invoice_item, quantity: 10, unit_price: 10, status: 'pending', item: item_1, invoice: invoice_1)#50
+        invoice_item_2 = create(:random_invoice_item, quantity: 4, unit_price: 100, status: 'pending', item: item_2, invoice: invoice_1)#300
         discount_1 = create(:random_bulk_discount, discount: 50, quantity_threshold: 10, merchant_id: 22)
+        discount_2 = create(:random_bulk_discount, discount: 25, quantity_threshold: 4, merchant_id: 22)
 
-        expect(invoice_1.total_discounts_for_eligible_items).to eq(50)
+        expect(invoice_1.total_discounts_for_eligible_items).to eq(350)
       end
     end
 
@@ -76,18 +77,18 @@ RSpec.describe Invoice, type: :model do
         merchant_1 = create(:random_merchant, id: 22)
         merchant_2 = create(:random_merchant, id: 14)
         item_1 = create(:random_item, merchant_id: 22)
-        item_2 = create(:random_item, merchant_id: 14)
+        item_2 = create(:random_item, merchant_id: 22)
         item_3 = create(:random_item, merchant_id: 14)
-        item_4 = create(:random_item, merchant_id: 22)
+        item_4 = create(:random_item, merchant_id: 14)
         invoice_1 = create(:random_invoice)
-        invoice_item_1 = create(:random_invoice_item, quantity: 10, unit_price: 10, status: 'pending', item: item_1, invoice: invoice_1)
-        invoice_item_2 = create(:random_invoice_item, quantity: 1, unit_price: 100, status: 'pending', item: item_2, invoice: invoice_1)
-        invoice_item_3 = create(:random_invoice_item, quantity: 10, unit_price: 10, status: 'pending', item: item_3, invoice: invoice_1)
-        invoice_item_3 = create(:random_invoice_item, quantity: 1, unit_price: 100, status: 'pending', item: item_4, invoice: invoice_1)
+        invoice_item_1 = create(:random_invoice_item, quantity: 10, unit_price: 10, status: 'pending', item: item_1, invoice: invoice_1)#50
+        invoice_item_2 = create(:random_invoice_item, quantity: 1, unit_price: 100, status: 'pending', item: item_2, invoice: invoice_1)#100
+        invoice_item_3 = create(:random_invoice_item, quantity: 4, unit_price: 10, status: 'pending', item: item_3, invoice: invoice_1)#30
+        invoice_item_4 = create(:random_invoice_item, quantity: 2, unit_price: 100, status: 'pending', item: item_4, invoice: invoice_1)#200
         discount_1 = create(:random_bulk_discount, discount: 50, quantity_threshold: 10, merchant_id: 22)
-        discount_2 = create(:random_bulk_discount, discount: 50, quantity_threshold: 10, merchant_id: 14)
+        discount_2 = create(:random_bulk_discount, discount: 25, quantity_threshold: 4, merchant_id: 14)
 
-        expect(invoice_1.total_revenue_with_discounts).to eq(300)
+        expect(invoice_1.total_revenue_with_discounts).to eq(380)
       end
     end
   end
