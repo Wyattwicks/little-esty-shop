@@ -5,7 +5,8 @@ RSpec.describe "Merchant Invoice Show Page" do
     @merchant = create(:random_merchant)
     @item_1 = create(:random_item, merchant: @merchant)
     @invoice_1 = create(:random_invoice)
-    @invoice_item_1 = create(:random_invoice_item, quantity: 75, unit_price: 17600, status: 'pending', item: @item_1, invoice: @invoice_1)
+    @invoice_item_1 = create(:random_invoice_item, quantity: 10, unit_price: 10, status: 'pending', item: @item_1, invoice: @invoice_1)
+    @discount_1 = create(:random_bulk_discount, discount: 50, quantity_threshold: 10, merchant_id: @merchant.id)
 
     visit merchant_invoice_path(@merchant, @invoice_1)
   end
@@ -24,29 +25,31 @@ RSpec.describe "Merchant Invoice Show Page" do
     end
 
     it "I see information of the items on the invoice" do
-
       within ".show-items" do
         expect(page).to have_content(@item_1.name)
-        expect(page).to have_content(75)
-        expect(page).to have_content('$17,600.00')
+        expect(page).to have_content(10)
+        expect(page).to have_content('$10')
         expect(page).to have_content('pending')
       end
     end
 
-    it "I see total revenue that will be generated from items on invoice" do
+    it "I see total revenue that includes bulk discounts" do
+        expect(page).to have_content('$50')
+    end
 
-      within ".total-revenue" do
-        expect(page).to have_content('$1,320,000.00')
-      end
+    it "Next to each invoice item I see a link to the show page for the bulk discount that was applied" do
+      expect(page).to have_link("Applied Discount")
+      click_on('Applied Discount')
+      expect(current_path).to eq(merchant_bulk_discount_path(@merchant, @discount_1))
     end
 
     it "I see a dropdown to update the invoice status" do
-      # binding.pry
+
       expect(page).to have_button('Update Invoice')
 
       select "completed", from: 'Status'
       click_on 'Update Invoice'
-    
+
       expect(current_path).to eq(merchant_invoice_path(@merchant, @invoice_1))
       expect(page).to have_content("completed")
     end

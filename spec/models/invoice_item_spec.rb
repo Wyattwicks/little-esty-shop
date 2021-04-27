@@ -4,6 +4,7 @@ RSpec.describe InvoiceItem, type: :model do
   describe "relationships" do
     it {should belong_to :invoice}
     it {should belong_to :item}
+    it {should have_many :bulk_discounts}
   end
 
   describe "validations" do
@@ -98,8 +99,22 @@ RSpec.describe InvoiceItem, type: :model do
         item_1 = create(:random_item, merchant: merchant)
         invoice_1 = create(:random_invoice)
         invoice_item_1 = create(:random_invoice_item, status: 'pending', unit_price: 17600, quantity: 75, item: item_1, invoice: invoice_1)
-      
+
         expect(InvoiceItem.invoice_items_details(invoice_1).first.status).to eq('pending')
+      end
+    end
+  end
+
+  describe "Instance Methods" do
+    describe '#discount_id' do
+      it 'I get the name of a discount that is applied to the invoice item' do
+        merchant = create(:random_merchant, id: 22)
+        item_1 = create(:random_item, merchant_id: 22)
+        invoice_1 = create(:random_invoice)
+        invoice_item_1 = create(:random_invoice_item, status: 'pending', unit_price: 10, quantity: 10, item: item_1, invoice: invoice_1)
+        discount_1 = create(:random_bulk_discount, discount: 50, quantity_threshold: 10, merchant_id: 22)
+        
+        expect(invoice_item_1.discount_id).to eq(discount_1.id)
       end
     end
   end

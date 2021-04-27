@@ -2,6 +2,8 @@ class InvoiceItem < ApplicationRecord
   belongs_to :item
   belongs_to :invoice
 
+  has_many :bulk_discounts, through: :item
+
   enum status: [:packaged, :pending, :shipped]
 
   validates_presence_of :quantity, :unit_price
@@ -48,9 +50,10 @@ class InvoiceItem < ApplicationRecord
 
   def self.invoice_items_details(invoice)
     find_by_sql("SELECT inv.id, i.name AS name,
-                ii.quantity AS quantity_ordered,
+                ii.quantity AS quantity,
                 ii.unit_price AS price_sold,
-                ii.status AS status
+                ii.status AS status,
+                ii.item_id AS item_id
                 FROM invoice_items ii
                 INNER JOIN items i
                 ON i.id=ii.item_id
@@ -61,4 +64,12 @@ class InvoiceItem < ApplicationRecord
                 WHERE inv.id=#{invoice.id}"
               )
   end
+
+  def discount_id
+    item.merchant.bulk_discounts.order(:discount)
+    .where("quantity_threshold <= ?", self.quantity)
+    .last
+    .id
+  end
+
 end
