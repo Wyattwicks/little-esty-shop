@@ -7,6 +7,7 @@ RSpec.describe "Merchant Invoice Show Page" do
     @invoice_1 = create(:random_invoice)
     @invoice_item_1 = create(:random_invoice_item, quantity: 10, unit_price: 10, status: 'pending', item: @item_1, invoice: @invoice_1)
     @discount_1 = create(:random_bulk_discount, discount: 50, quantity_threshold: 10, merchant_id: @merchant.id)
+    @discount_2 = create(:random_bulk_discount, discount: 50, quantity_threshold: 5, merchant_id: @merchant.id)
 
     visit merchant_invoice_path(@merchant, @invoice_1)
   end
@@ -41,6 +42,10 @@ RSpec.describe "Merchant Invoice Show Page" do
       expect(page).to have_link("Applied Discount")
       click_on('Applied Discount')
       expect(current_path).to eq(merchant_bulk_discount_path(@merchant, @discount_1))
+    end
+
+    it "If a discount isn't applied, I do not see a link to that discount" do
+      expect(page).to_not have_content(@discount_2)
     end
 
     it "I see a dropdown to update the invoice status" do
