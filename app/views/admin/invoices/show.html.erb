@@ -22,6 +22,8 @@
 
     <p>Total Revenue: <%= number_to_currency(@invoice.total_revenue) %></p>
 
+    <p>Total Revenue with Discounts: <%= number_to_currency(@invoice.total_revenue_with_discounts) %></p>
+
     <h2>Customer:</h2>
     <div id='admin_invoice_customer'>
       <%= @invoice.customer.first_name + ' ' + @invoice.customer.last_name %>
