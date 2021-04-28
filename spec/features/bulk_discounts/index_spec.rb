@@ -4,9 +4,9 @@ RSpec.describe "Merchant Discounts Index Page" do
   before :each do
     @merchant = create(:random_merchant, id: 22)
     @merchant_2 = create(:random_merchant, id: 14)
-    @discount_1 = create(:random_bulk_discount, merchant_id: 22)
-    @discount_2 = create(:random_bulk_discount, merchant_id: 22)
-    @discount_3 = create(:random_bulk_discount, merchant_id: 14)
+    @discount_1 = create(:random_bulk_discount, discount: 50, quantity_threshold: 10, merchant_id: 22)
+    @discount_2 = create(:random_bulk_discount, discount: 25, quantity_threshold: 15, merchant_id: 22)
+    @discount_3 = create(:random_bulk_discount, discount: 37, quantity_threshold: 37, merchant_id: 14)
     visit merchant_bulk_discounts_path(@merchant)
   end
 
@@ -19,8 +19,12 @@ RSpec.describe "Merchant Discounts Index Page" do
       expect(page).to have_content(@discount_2.id)
       expect(page).to have_content(@discount_2.discount)
       expect(page).to have_content(@discount_2.quantity_threshold)
+    end
 
+    it "and I do not see discounts for other merchants" do
       expect(page).to_not have_content(@discount_3.id)
+      expect(page).to_not have_content(@discount_3.discount)
+      expect(page).to_not have_content(@discount_3.quantity_threshold)
     end
 
     it "each discount listed includes a link to its show page" do
@@ -41,11 +45,13 @@ RSpec.describe "Merchant Discounts Index Page" do
 
     it "I see a link to create a new discount" do
       expect(page).to have_link("New Discount")
+      click_on "New Discount"
+      expect(current_path).to eq(new_merchant_bulk_discount_path(@merchant))
     end
 
     it "Next to each discount I see a link to delete it" do
       merchant_3 = create(:random_merchant, id: 25)
-      discount_4 = create(:random_bulk_discount, merchant_id: 25)
+      discount_4 = create(:random_bulk_discount, discount: 88, quantity_threshold: 88, merchant_id: 25)
       visit merchant_bulk_discounts_path(merchant_3)
 
       expect(page).to have_link("Delete")
@@ -56,6 +62,5 @@ RSpec.describe "Merchant Discounts Index Page" do
       expect(page).to_not have_content(discount_4.discount)
       expect(page).to_not have_content(discount_4.quantity_threshold)
     end
-
   end
 end

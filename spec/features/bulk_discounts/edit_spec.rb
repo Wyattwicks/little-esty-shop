@@ -29,6 +29,14 @@ RSpec.describe "Merchant Discount Edit Page" do
       expect(page).to have_content(48)
       expect(page).to have_content(300)
     end
+
+    it "When I do not enter attributes right, I am redirected back to the edit page with a flash error" do
+      visit edit_merchant_bulk_discount_path(@merchant, @discount_1)
+      fill_in 'Discount', with: ""
+      fill_in 'Quantity threshold', with: 300
+      click_on 'Update Bulk discount'
+      expect(current_path).to eq(edit_merchant_bulk_discount_path(@merchant, @discount_1))
+    end
   end
 
 end
