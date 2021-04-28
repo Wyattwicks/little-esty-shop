@@ -27,5 +27,15 @@ RSpec.describe "Merchant New Bulk Discount" do
       expect(page).to have_content(100)
       expect(page).to have_content(10)
     end
+
+    it "If I do not fill in the correct attributes I am redirected back to the new page with a flash message" do
+      visit new_merchant_bulk_discount_path(@merchant)
+
+      fill_in "Discount", with: ""
+      fill_in "Quantity threshold", with: 10
+      click_on "Create Bulk discount"
+
+      expect(current_path).to eq(new_merchant_bulk_discount_path(@merchant))
+    end
   end
 end

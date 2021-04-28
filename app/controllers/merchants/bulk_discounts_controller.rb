@@ -25,7 +25,7 @@ class Merchants::BulkDiscountsController < ApplicationController
       flash[:success] = 'Discount successfully updated!'
     else
       redirect_to edit_merchant_bulk_discount_path(@merchant, @bulk_discount)
-      flash[:error] = "Error: #{error_message(bulk_discount.errors)}"
+      flash[:error] = "Error: #{error_message(@bulk_discount.errors)}"
     end
   end
 
@@ -33,14 +33,14 @@ class Merchants::BulkDiscountsController < ApplicationController
   end
 
   def create
-    merchant = Merchant.find(params[:merchant_id])
-    bulk_discount = merchant.bulk_discounts.new(bulk_discount_params)
+    @merchant = Merchant.find(params[:merchant_id])
+    @bulk_discount = @merchant.bulk_discounts.new(bulk_discount_params)
 
-    if bulk_discount.save
+    if @bulk_discount.save
       redirect_to merchant_bulk_discounts_path
     else
-      redirect_to new_merchant_bulk_discount_path
-      flash[:error] = "Error: #{error_message(bulk_discount.errors)}"
+      redirect_to new_merchant_bulk_discount_path(@merchant)
+      flash[:error] = "Error: #{error_message(@bulk_discount.errors)}"
     end
   end
 
