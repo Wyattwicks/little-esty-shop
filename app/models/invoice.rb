@@ -25,17 +25,14 @@ class Invoice < ApplicationRecord
       .where('invoice_items.quantity >= bulk_discounts.quantity_threshold')
       .group('invoice_items.item_id')
       .select("invoice_items.item_id, MIN(invoice_items.quantity * invoice_items.unit_price * (1 - bulk_discounts.discount / 100.0)) AS total_discount")
-      .distinct
       .sum(&:total_discount)
       .to_f
 
   end
 
   def total_revenue_discounts_dont_apply
-
     invoice_items.joins(:bulk_discounts)
       .where('invoice_items.quantity < bulk_discounts.quantity_threshold')
-      .distinct
       .sum("invoice_items.unit_price * invoice_items.quantity")
       .to_f
   end
