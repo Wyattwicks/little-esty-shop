@@ -40,7 +40,7 @@ RSpec.describe Invoice, type: :model do
       end
     end
 
-    describe '#total_discounts_for_eligible_items' do
+    describe '#total_discounts_revenue' do
       it 'returns revenue of all items with a discount' do
         merchant_1 = create(:random_merchant, id: 22)
         merchant_2 = create(:random_merchant, id: 14)
@@ -52,11 +52,25 @@ RSpec.describe Invoice, type: :model do
         discount_1 = create(:random_bulk_discount, discount: 50, quantity_threshold: 10, merchant_id: 22)
         discount_2 = create(:random_bulk_discount, discount: 25, quantity_threshold: 4, merchant_id: 22)
 
-        expect(invoice_1.total_discounts_for_eligible_items).to eq(350)
+        expect(invoice_1.total_discount_revenue).to eq(350)
+      end
+
+      it 'does not include revenue for items where a discount is not applied' do
+        merchant_1 = create(:random_merchant, id: 22)
+        merchant_2 = create(:random_merchant, id: 14)
+        item_1 = create(:random_item, merchant_id: 22)
+        item_2 = create(:random_item, merchant_id: 22)
+        invoice_1 = create(:random_invoice)
+        invoice_item_1 = create(:random_invoice_item, quantity: 10, unit_price: 10, status: 'pending', item: item_1, invoice: invoice_1)#50
+        invoice_item_2 = create(:random_invoice_item, quantity: 4, unit_price: 100, status: 'pending', item: item_2, invoice: invoice_1)#300
+        discount_1 = create(:random_bulk_discount, discount: 50, quantity_threshold: 10, merchant_id: 22)
+        discount_2 = create(:random_bulk_discount, discount: 25, quantity_threshold: 5, merchant_id: 22)
+
+        expect(invoice_1.total_discount_revenue).to eq(450)
       end
     end
 
-    describe '#total_revenue_for_items_where_discounts_dont_apply' do
+    describe '#total_revenue_discounts_dont_apply' do
       it 'returns revenue of all items where a discount does not apply' do
         merchant_1 = create(:random_merchant, id: 22)
         merchant_2 = create(:random_merchant, id: 14)
@@ -68,7 +82,7 @@ RSpec.describe Invoice, type: :model do
         discount_1 = create(:random_bulk_discount, discount: 50, quantity_threshold: 10, merchant_id: 22)
         discount_2 = create(:random_bulk_discount, discount: 50, quantity_threshold: 10, merchant_id: 14)
 
-        expect(invoice_1.total_revenue_for_items_where_discounts_dont_apply).to eq(100)
+        expect(invoice_1.total_revenue_discounts_dont_apply).to eq(100)
       end
     end
 

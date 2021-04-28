@@ -20,7 +20,7 @@ class Invoice < ApplicationRecord
     invoice_items.sum("invoice_items.unit_price * invoice_items.quantity")
   end
 
-  def total_discounts_for_eligible_items
+  def total_discount_revenue
      invoice_items.joins(:bulk_discounts)
       .where('invoice_items.quantity >= bulk_discounts.quantity_threshold')
       .group('invoice_items.item_id')
@@ -31,7 +31,7 @@ class Invoice < ApplicationRecord
 
   end
 
-  def total_revenue_for_items_where_discounts_dont_apply
+  def total_revenue_discounts_dont_apply
 
     invoice_items.joins(:bulk_discounts)
       .where('invoice_items.quantity < bulk_discounts.quantity_threshold')
@@ -41,8 +41,8 @@ class Invoice < ApplicationRecord
   end
 
   def total_revenue_with_discounts
-    discounts = self.total_discounts_for_eligible_items
-    no_discounts = self.total_revenue_for_items_where_discounts_dont_apply
+    discounts = self.total_discount_revenue
+    no_discounts = self.total_revenue_discounts_dont_apply
     no_discounts + discounts
   end
 end
